@@ -11,10 +11,13 @@ from typing import Literal
 
 import gin
 import numpy as np
+import upkie.controllers
+from upkie.utils.clamp import clamp_abs
 from upkie.utils.filters import abs_bounded_derivative_filter
 
 from .remote_control import RemoteControl
-from .sagittal_balance import MPCBalancer, SagittalBalancer
+
+MPCBalancer = gin.external_configurable(upkie.controllers.MPCBalancer)
 
 
 @gin.configurable
@@ -35,7 +38,7 @@ class WheelController:
     """
 
     left_wheeled: bool
-    sagittal_balancer: SagittalBalancer
+    sagittal_balancer: MPCBalancer
     target_ground_velocity: float
     target_yaw_velocity: float
     turning_deadband: float
@@ -54,7 +57,7 @@ class WheelController:
         """Initialize balancer.
 
         Args:
-            balancer_class: String indicating the SagittalBalancer class to
+            balancer_class: String indicating the sagittal balancer class to
                 instantiate.
             left_wheeled: Set to True (default) if the robot is left wheeled,
                 that is, a positive turn of the left wheel results in forward
@@ -105,7 +108,7 @@ class WheelController:
         self.update_target_ground_velocity(observation, dt)
         self.update_target_yaw_velocity(observation, dt)
 
-        ground_velocity = self.sagittal_balancer.compute_ground_velocity(
+        ground_velocity = self.sagittal_balancer.step(
             self.target_ground_velocity, observation, dt
         )
 
