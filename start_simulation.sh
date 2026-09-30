@@ -3,7 +3,7 @@
 # SPDX-License-Identifier: Apache-2.0
 
 DOWNLOAD_URL="https://github.com/upkie/upkie/releases/download"
-VERSION=8.0.0
+VERSION=12.0.0
 
 SYSTEM=$(uname -s)
 ARCH=$(uname -m)
@@ -22,21 +22,7 @@ for arg in "$@"; do
     fi
 done
 
-if [[ "$SYSTEM" == Darwin ]]; then
-    echo "🍏 macOS operating system"
-    if [[ "$ARCH" == x86_64* ]]; then
-        echo "⚙️  x86 64-bit CPU architecture"
-        SPINE_ARCHIVE="$DOWNLOAD_URL"/v"$VERSION"/darwin_x86_bullet_spine.tar.gz
-    elif [[ "$ARCH" == i*86 ]]; then
-        echo "⚙️  x86 32-bit CPU architecture"
-        SPINE_ARCHIVE="$DOWNLOAD_URL"/v"$VERSION"/darwin_x86_bullet_spine.tar.gz
-    elif  [[ "$ARCH" == arm* ]]; then
-        echo "⚙️  ARM CPU architecture"
-        SPINE_ARCHIVE="$DOWNLOAD_URL"/v"$VERSION"/darwin_arm64_bullet_spine.tar.gz
-    else
-        echo "Unsupported architecture $ARCH"
-    fi
-elif  [[ "$SYSTEM" == Linux ]]; then
+if [[ "$SYSTEM" == Linux ]]; then
     echo "🐧 Linux operating system"
     if [[ "$ARCH" == x86_64* ]]; then
         echo "⚙️  x86 64-bit CPU architecture"
@@ -96,6 +82,6 @@ if [[ -v REBUILD ]]; then
     echo "You will need to build the simulation spine from the upkie repository:"
     echo ""
     echo "    git clone https://github.com/upkie/upkie"
-    echo "    cd upkie && ./start_simulation.sh"
+    echo "    cd upkie && ./spines/start_bullet_spine.sh --build"
     echo ""
 fi
