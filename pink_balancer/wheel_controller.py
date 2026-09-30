@@ -160,12 +160,14 @@ class WheelController:
             unfiltered_velocity = -max_velocity * axis_value
         except KeyError:
             unfiltered_velocity = 0.0
-        self.target_ground_velocity = abs_bounded_derivative_filter(
-            self.target_ground_velocity,
-            unfiltered_velocity,
-            dt,
+        self.target_ground_velocity = clamp_abs(
+            abs_bounded_derivative_filter(
+                self.target_ground_velocity,
+                unfiltered_velocity,
+                dt,
+                self.remote_control.max_linear_accel,
+            ),
             self.remote_control.max_linear_velocity,
-            self.remote_control.max_linear_accel,
         )
 
     def update_target_yaw_velocity(self, observation: dict, dt: float) -> None:
