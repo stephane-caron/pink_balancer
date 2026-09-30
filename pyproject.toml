@@ -2,7 +2,7 @@
 name = "pink_balancer"
 version = "1.0.0"
 description = "The Pink balancer is a work-in-progress agent for Upkie wheeled bipeds"
-requires-python = ">= 3.9"
+requires-python = ">= 3.10"
 dependencies = []
 
 [build-system]
