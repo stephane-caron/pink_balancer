@@ -1,41 +1,43 @@
 # Pink balancer
 
-[![upkie](https://img.shields.io/badge/upkie-8.0.0-bbaacc)](https://github.com/upkie/upkie/tree/v8.0.0)
+[![upkie](https://img.shields.io/badge/upkie-12.0.0-bbaacc)](https://github.com/upkie/upkie/tree/v12.0.0)
 
 An agent for [Upkie](https://github.com/upkie/upkie/) that combines wheeled balancing with inverse kinematics computed by [Pink](https://github.com/stephane-caron/pink). This is the controller that runs in the [first](https://www.youtube.com/shorts/8b36XcCgh7s) [two](https://www.youtube.com/watch?v=NO_TkHGS0wQ) videos of Upkie.
 
 ## Installation
 
-### On your machine
+This agent uses [pixi](https://pixi.sh/latest/#installation) to manage its Python environment, both on your machine and on your Upkie.
+
+## Usage
+
+### In simulation
+
+Start a simulation spine:
 
 ```console
-conda env create -f environment.yaml
-conda activate ppo_balancer
+./start_simulation.sh
+```
+
+Then, in a separate terminal, run the agent:
+
+```console
+pixi run agent
 ```
 
 ### On your Upkie
 
-The PPO balancer uses [pixi](https://pixi.sh/latest/#installation) and [pixi-pack](https://github.com/Quantco/pixi-pack/releases) to pack a standalone Python environment to run policies on your Upkie. First, create `environment.tar` and upload it by:
+Upload the agent to your robot (this assumes there is an `upkie` host in your SSH configuration):
 
 ```console
-make pack_pixi_env
 make upload
 ```
 
-Then, unpack the remote environment:
+Then, start the pi3hat spine on the robot and run the agent from there:
 
 ```console
-$ ssh user@your-upkie
-user@your-upkie:~$ cd ppo_balancer
-user@your-upkie:ppo_balancer$ make unpack_pixi_env
-```
-
-## Usage
-
-Start the simulation or pi3hat spine, then run:
-
-```console
-make run_agent
+$ ssh upkie
+user@upkie:~$ cd pink_balancer
+user@upkie:pink_balancer$ pixi run agent
 ```
 
 ### Gamepad commands
