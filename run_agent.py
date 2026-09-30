@@ -11,11 +11,10 @@ import traceback
 from pathlib import Path
 
 import gin
-import upkie.config
 from loop_rate_limiters import RateLimiter
-from upkie.spine import SpineInterface
+from upkie.envs.backends import SpineBackend
+from upkie.logging import logger
 from upkie.utils.raspi import configure_agent_process, on_raspi
-from upkie.utils.spdlog import logging
 
 from pink_balancer import WholeBodyController
 
@@ -44,25 +43,23 @@ def parse_command_line_arguments() -> argparse.Namespace:
 
 
 def run(
-    spine: SpineInterface,
-    spine_config: dict,
+    backend: SpineBackend,
     controller: WholeBodyController,
     frequency: float = 200.0,
 ) -> None:
     """Read observations and send actions to the spine.
 
     Args:
-        spine: Interface to the spine.
-        spine_config: Spine configuration dictionary.
+        backend: Spine backend.
         controller: Whole-body controller.
         frequency: Control frequency in Hz.
     """
     dt = 1.0 / frequency
     rate = RateLimiter(frequency, "controller")
-    observation = spine.start(spine_config)
+    observation = backend.reset()
     while True:
         action = controller.cycle(observation, dt)
-        observation = spine.set_action(action)
+        observation = backend.step(action)
         rate.sleep()
 
 
@@ -85,48 +82,49 @@ if __name__ == "__main__":
     if on_raspi():
         configure_agent_process()
 
-    spine = SpineInterface(retries=10)
     controller = WholeBodyController(visualize=args.visualize)
-    spine_config = upkie.config.SPINE_CONFIG.copy()
-    spine_config["bullet"]["reset"]["joint_configuration"] = [
-        0.1,
-        0.2,
-        0.0,
-        0.1,
-        0.2,
-        0.0,
-    ]
     wheel_controller = controller.wheel_controller
     wheel_radius = wheel_controller.wheel_radius
-    wheel_odometry = spine_config["wheel_odometry"]
     left_sign: float = 1.0 if wheel_controller.left_wheeled else -1.0
     right_sign = -left_sign
-    wheel_odometry["signed_radius"]["left_wheel"] = left_sign * wheel_radius
-    wheel_odometry["signed_radius"]["right_wheel"] = right_sign * wheel_radius
+    spine_config = {
+        "bullet": {
+            "reset": {
+                "joint_configuration": [0.1, 0.2, 0.0, 0.1, 0.2, 0.0],
+            },
+        },
+        "wheel_odometry": {
+            "signed_radius": {
+                "left_wheel": left_sign * wheel_radius,
+                "right_wheel": right_sign * wheel_radius,
+            },
+        },
+    }
+    backend = SpineBackend(spine_config=spine_config)
 
     max_rc_vel = wheel_controller.remote_control.max_linear_velocity
     max_ground_vel = wheel_controller.sagittal_balancer.max_ground_velocity
-    logging.info(f"Knees bend {controller.height_controller.knee_side}")
-    logging.info(f"Max. remote-control velocity: {max_rc_vel} m/s")
-    logging.info(f"Max. commanded velocity: {max_ground_vel} m/s")
-    logging.info(f"Wheel radius: {wheel_radius} m")
-    logging.info(f"Additional spine config:\n\n{spine_config}\n\n")
+    logger.info(f"Knees bend {controller.height_controller.knee_side}")
+    logger.info(f"Max. remote-control velocity: {max_rc_vel} m/s")
+    logger.info(f"Max. commanded velocity: {max_ground_vel} m/s")
+    logger.info(f"Wheel radius: {wheel_radius} m")
+    logger.info(f"Additional spine config:\n\n{spine_config}\n\n")
 
     try:
-        run(spine, spine_config, controller)
+        run(backend, controller)
     except KeyboardInterrupt:
-        logging.info("Caught a keyboard interrupt")
+        logger.info("Caught a keyboard interrupt")
     except Exception:
-        logging.error("Controller raised an exception")
+        logger.error("Controller raised an exception")
         print("")
         traceback.print_exc()
         print("")
 
-    logging.info("Stopping the spine...")
+    logger.info("Stopping the spine...")
     try:
-        spine.stop()
+        backend.close()
     except Exception:
-        logging.error("Error while stopping the spine!")
+        logger.error("Error while stopping the spine!")
         print("")
         traceback.print_exc()
         print("")

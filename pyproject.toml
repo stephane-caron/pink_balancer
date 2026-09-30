@@ -9,9 +9,9 @@ dependencies = []
 build-backend = "flit_core.buildapi"
 requires = ["flit_core >=2,<4"]
 
-[tool.pixi.project]
+[tool.pixi.workspace]
 channels = ["conda-forge"]
-platforms = ["linux-64", "linux-aarch64", "osx-arm64"]
+platforms = ["linux-64", "linux-aarch64"]
 
 [tool.pixi.pypi-dependencies]
 pink_balancer = { path = ".", editable = true }
@@ -21,21 +21,13 @@ gin-config = ">=0.5.0"
 meshcat-shapes = ">=0.3.0"
 pink = ">=3.0.0,<4"
 pinocchio = ">=3.1.0,<4"
-qpmpc = ">=3.0.1,<4"
+proxsuite = ">=0.7.2,<0.8"
+qpmpc = ">=3.1.0,<3.2"  # upkie 12.0.0 MPCBalancer breaks with qpmpc 3.2
 qpsolvers = ">=4.2.0,<5"
-upkie = "==8.0.0"
+upkie = ">=12.0.0,<13"
 
-[tool.pixi.feature.agent]
-tasks.agent = "python run_agent.py"
-
-[tool.pixi.feature.pack]
-dependencies = { pixi-pack = ">=0.7.2" }
-tasks.pack = "pixi-pack --environment default --platform linux-aarch64 --ignore-pypi-non-wheel"
-
-[tool.pixi.environments]
-default = { features = [], solve-group = "default" }
-agent = { features = ["agent"], solve-group = "default" }
-pack = { features = ["pack"], solve-group = "default" }
+[tool.pixi.tasks]
+agent = "python run_agent.py"
 
 [tool.ruff]
 line-length = 79
