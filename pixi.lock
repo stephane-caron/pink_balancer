@@ -207,14 +207,14 @@ environments:
       - conda: https://conda.anaconda.org/conda-forge/noarch/pure_eval-0.2.3-pyhd8ed1ab_1.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/pygments-2.19.1-pyhd8ed1ab_0.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/pyngrok-7.2.2-pyhd8ed1ab_1.conda
-      - conda: https://conda.anaconda.org/conda-forge/noarch/qpmpc-3.1.0-pyhd8ed1ab_0.conda
+      - conda: https://conda.anaconda.org/conda-forge/noarch/qpmpc-3.2.0-pyhd8ed1ab_0.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/qpsolvers-4.4.0-pyhd8ed1ab_1.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/stack_data-0.6.3-pyhd8ed1ab_1.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/traitlets-5.14.3-pyhd8ed1ab_1.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/typing_extensions-4.12.2-pyha770c72_1.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/tzdata-2024b-hc8b5060_0.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/u-msgpack-python-2.8.0-pyhff2d567_1.conda
-      - conda: https://conda.anaconda.org/conda-forge/noarch/upkie-12.0.0-pyhd8ed1ab_1.conda
+      - conda: https://conda.anaconda.org/conda-forge/noarch/upkie-13.0.0-pyhd8ed1ab_0.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/upkie_description-2.1.0-pyhd8ed1ab_1.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/wcwidth-0.2.13-pyhd8ed1ab_1.conda
       - pypi: ./
@@ -403,14 +403,14 @@ environments:
       - conda: https://conda.anaconda.org/conda-forge/noarch/pure_eval-0.2.3-pyhd8ed1ab_1.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/pygments-2.19.1-pyhd8ed1ab_0.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/pyngrok-7.2.2-pyhd8ed1ab_1.conda
-      - conda: https://conda.anaconda.org/conda-forge/noarch/qpmpc-3.1.0-pyhd8ed1ab_0.conda
+      - conda: https://conda.anaconda.org/conda-forge/noarch/qpmpc-3.2.0-pyhd8ed1ab_0.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/qpsolvers-4.4.0-pyhd8ed1ab_1.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/stack_data-0.6.3-pyhd8ed1ab_1.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/traitlets-5.14.3-pyhd8ed1ab_1.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/typing_extensions-4.12.2-pyha770c72_1.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/tzdata-2024b-hc8b5060_0.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/u-msgpack-python-2.8.0-pyhff2d567_1.conda
-      - conda: https://conda.anaconda.org/conda-forge/noarch/upkie-12.0.0-pyhd8ed1ab_1.conda
+      - conda: https://conda.anaconda.org/conda-forge/noarch/upkie-13.0.0-pyhd8ed1ab_0.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/upkie_description-2.1.0-pyhd8ed1ab_1.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/wcwidth-0.2.13-pyhd8ed1ab_1.conda
       - pypi: ./
@@ -5106,19 +5106,19 @@ packages:
   - pkg:pypi/pyngrok?source=hash-mapping
   size: 24519
   timestamp: 1734845978000
-- conda: https://conda.anaconda.org/conda-forge/noarch/qpmpc-3.1.0-pyhd8ed1ab_0.conda
-  sha256: 98c27b0b24df9148d10d9ab57347fcf5f08a85dedc3dd4bf6a6682225cdbb412
-  md5: 4fc8cb824cae783fa92aeab0574f92e6
+- conda: https://conda.anaconda.org/conda-forge/noarch/qpmpc-3.2.0-pyhd8ed1ab_0.conda
+  sha256: 77a13ef29b3578b0f61da2fdbb09fcdb8dbed82ce629f06cbbdfc06e11b14e69
+  md5: b24f3cc199c984d311ac31d26b7e058a
   depends:
-  - python >=3.9
+  - python >=3.10
   - qpsolvers >=1.8.0
   license: Apache-2.0
   license_family: APACHE
   purls:
   - pkg:pypi/qpmpc?source=hash-mapping
   run_exports: {}
-  size: 23153
-  timestamp: 1748270079834
+  size: 27785
+  timestamp: 1784703083529
 - conda: https://conda.anaconda.org/conda-forge/noarch/qpsolvers-4.4.0-pyhd8ed1ab_1.conda
   sha256: ef010e6c5c38011b95b5a8aef2b2ec716784a33ebaa5355d528cc0920ac77c8e
   md5: b430d3693df3511c50bbf35542c9ac40
@@ -5194,25 +5194,25 @@ packages:
   - pkg:pypi/u-msgpack-python?source=hash-mapping
   size: 15064
   timestamp: 1734904246170
-- conda: https://conda.anaconda.org/conda-forge/noarch/upkie-12.0.0-pyhd8ed1ab_1.conda
-  sha256: 496998986049be7641287dfe4679fef87819012e4b060506be693f9b30541b9e
-  md5: c2ea91627b42f2c092d8c223d0f73e4a
+- conda: https://conda.anaconda.org/conda-forge/noarch/upkie-13.0.0-pyhd8ed1ab_0.conda
+  sha256: 79d7600192662add6d67bb17fda26b3c9c7b140b5d2f3d767872dc61b9c3325f
+  md5: 96db80bdcea65ca1fb069702929324b4
   depends:
   - gymnasium >=0.29.1
   - loop-rate-limiters >=1.0.0
   - msgpack-python >=1.0.2
   - numpy >=1.24.3
-  - python >=3.10
+  - python >=3.11
   - pyyaml >=6.0
   - scipy >=1.10.0
   - upkie_description >=2.1.0
   license: Apache-2.0
   license_family: APACHE
   purls:
-  - pkg:pypi/upkie?source=hash-mapping
+  - pkg:pypi/upkie?source=compressed-mapping
   run_exports: {}
-  size: 66695
-  timestamp: 1784019996875
+  size: 63317
+  timestamp: 1790852070096
 - conda: https://conda.anaconda.org/conda-forge/noarch/upkie_description-2.1.0-pyhd8ed1ab_1.conda
   sha256: 390797a4dec65476df078d027fa2cf0be9ddfab9411b24ce9f089e70e02cb12c
   md5: bba35fe4fed55a84c56b15e6b316b12c
