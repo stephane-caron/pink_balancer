@@ -22,9 +22,9 @@ meshcat-shapes = ">=0.3.0"
 pink = ">=3.0.0,<4"
 pinocchio = ">=3.1.0,<4"
 proxsuite = ">=0.7.2,<0.8"
-qpmpc = ">=3.1.0,<3.2"  # upkie 12.0.0 MPCBalancer breaks with qpmpc 3.2
+qpmpc = ">=3.1.0,<4"
 qpsolvers = ">=4.2.0,<5"
-upkie = ">=12.0.0,<13"
+upkie = ">=13.0.0,<14"
 
 [tool.pixi.tasks]
 agent = "python run_agent.py"
