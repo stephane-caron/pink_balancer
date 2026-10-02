@@ -62,6 +62,11 @@ if [[ -n "$SPINE_ARCHIVE" ]] && [[ -z "${REBUILD}" ]]; then
         CURL_TAR_RC=$?
     fi
 
+    # The v13.0.0 archive ships a runfiles MANIFEST with absolute paths from
+    # the machine that built it. Remove it so that the spine finds its robot
+    # descriptions in the runfiles directory instead.
+    rm -f "${CACHE_DIR}/bullet_spine.runfiles/MANIFEST"
+
     if [[ $CURL_TAR_RC -eq 0 ]]; then
         echo "✅ Simulation spine downloaded to cache, let's roll!"
         cd "${CACHE_DIR}" || exit 1
