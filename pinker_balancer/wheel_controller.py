@@ -11,7 +11,7 @@ from typing import Literal
 
 import gin
 import numpy as np
-import upkie.controllers
+from upkie.controllers import MPCBalancer
 from upkie.utils.clamp import clamp_abs
 from upkie.utils.filters import abs_bounded_derivative_filter
 
@@ -48,11 +48,11 @@ class WheelController:
 
     def __init__(
         self,
-        balancer_class: Literal["MPCBalancer"],
-        left_wheeled: bool,
-        turning_deadband: float,
-        turning_decision_time: float,
-        wheel_radius: float,
+        balancer_class: Literal["MPCBalancer"] = "MPCBalancer",
+        left_wheeled: bool = True,
+        turning_deadband: float = 0.3,
+        turning_decision_time: float = 0.2,
+        wheel_radius: float = 0.06,
     ):
         """Initialize balancer.
 

@@ -3,17 +3,16 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-import gin
-import meshcat_shapes
+import os
+
 import numpy as np
-import pink
-import pinocchio as pin
+import pinker
 import upkie_description
 from numpy.typing import NDArray
-from pink import solve_ik
-from pink.tasks import FrameTask, PostureTask
-from pink.utils import custom_configuration_vector
-from pink.visualization import start_meshcat_visualizer
+from pinker import solve_ik
+from pinker.kinematics import SE3, RobotWrapper, custom_configuration
+from pinker.kinematics.so3 import quaternion_wxyz
+from pinker.tasks import FrameTask, PostureTask
 from upkie.logging import logger
 from upkie.utils.clamp import clamp
 
@@ -55,9 +54,9 @@ def serialize_to_servo_action(configuration, velocity, servo_layout) -> dict:
     """
     target = {}
     model = configuration.model
-    tau_max = model.effortLimit
+    tau_max = model.effort_limit
     for joint_name in servo_layout.keys():
-        joint_id = model.getJointId(joint_name)
+        joint_id = model.get_joint_id(joint_name)
         joint = model.joints[joint_id]
         target[joint_name] = {
             "position": configuration.q[joint.idx_q],
@@ -67,17 +66,36 @@ def serialize_to_servo_action(configuration, velocity, servo_layout) -> dict:
     return target
 
 
-def add_target_frames(visualizer):
-    """Add target frames for visualization.
+def add_contact_frames(visualizer) -> dict:
+    """Add contact and contact-target frames for visualization.
 
     Args:
-        visualizer: Meshcat viewer wrapper.
+        visualizer: Viser visualizer.
+
+    Returns:
+        Dictionary of Viser frame handles, by frame name.
     """
-    viewer = visualizer.viewer
-    meshcat_shapes.frame(viewer["left_contact_target"], opacity=0.5)
-    meshcat_shapes.frame(viewer["right_contact_target"], opacity=0.5)
-    meshcat_shapes.frame(viewer["left_contact"], opacity=1.0)
-    meshcat_shapes.frame(viewer["right_contact"], opacity=1.0)
+    scene = visualizer.viewer.scene
+    frames = {}
+    for contact in ("left_contact", "right_contact"):
+        frames[f"{contact}_target"] = scene.add_frame(
+            f"/{contact}_target", axes_length=0.1, axes_radius=0.003
+        )
+        frames[contact] = scene.add_frame(
+            f"/{contact}", axes_length=0.1, axes_radius=0.005
+        )
+    return frames
+
+
+def set_frame_transform(frame, transform: SE3) -> None:
+    """Set the pose of a Viser frame from a rigid transform.
+
+    Args:
+        frame: Viser frame handle.
+        transform: Transform from the frame to the world frame.
+    """
+    frame.position = transform.translation
+    frame.wxyz = quaternion_wxyz(transform.rotation)
 
 
 @gin.configurable
@@ -103,7 +121,7 @@ class HeightController:
     max_height_difference: float
     max_init_joint_velocity: float
     max_lean_velocity: float
-    robot: pin.RobotWrapper
+    robot: RobotWrapper
     target_height: float = 0.0
     target_position_wheel_in_rest: dict[NDArray[float]]
     tasks: dict
@@ -111,13 +129,13 @@ class HeightController:
 
     def __init__(
         self,
-        knees_forward: bool,
-        max_crouch_height: float,
-        max_crouch_velocity: float,
-        max_height_difference: float,
-        max_init_joint_velocity: float,
-        max_lean_velocity: float,
-        visualize: bool,
+        knees_forward: bool = True,
+        max_crouch_height: float = 0.08,
+        max_crouch_velocity: float = 0.05,
+        max_height_difference: float = 0.02,
+        max_init_joint_velocity: float = 0.1,
+        max_lean_velocity: float = 0.04,
+        visualize: bool = False,
     ):
         """Create controller.
 
@@ -133,10 +151,16 @@ class HeightController:
                 wheel contact points, in [m].
             max_lean_velocity: Maximum leaning (to the side) velocity, in [m] /
                 [s].
-            visualize: If true, open a MeshCat visualizer on the side.
+            visualize: If true, open a Viser visualizer on the side.
         """
-        robot = upkie_description.load_in_pinocchio(root_joint=None)
-        neutral_configuration = pink.Configuration(
+        robot = pinker.load_robot_urdf(
+            upkie_description.URDF_PATH,
+            package_dirs=[
+                upkie_description.PATH,
+                os.path.dirname(upkie_description.PATH),
+            ],
+        )
+        neutral_configuration = pinker.Configuration(
             robot.model, robot.data, robot.q0
         )
         servo_layout = {
@@ -189,8 +213,8 @@ class HeightController:
 
         sign = -1.0 if knees_forward else +1.0
         tasks["posture"].set_target(
-            custom_configuration_vector(
-                robot,
+            custom_configuration(
+                robot.model,
                 left_hip=(-sign * 0.1),
                 left_knee=(+sign * 0.2),
                 right_hip=(+sign * 0.1),
@@ -210,9 +234,12 @@ class HeightController:
             transform_rest_to_world[target] = transform_target_to_world
 
         visualizer = None
+        visualizer_frames = {}
         if visualize:
-            visualizer = start_meshcat_visualizer(robot)
-            add_target_frames(visualizer)
+            from pinker.visualizer import start_viser_visualizer
+
+            visualizer = start_viser_visualizer(robot)
+            visualizer_frames = add_contact_frames(visualizer)
 
         logger.info("Initializing Upkie to its neutral configuration...")
 
@@ -239,6 +266,7 @@ class HeightController:
         self.tasks = tasks
         self.transform_rest_to_world = transform_rest_to_world
         self.visualizer = visualizer
+        self.visualizer_frames = visualizer_frames
 
     def get_next_height_from_joystick(
         self, observation: dict, dt: float
@@ -323,11 +351,11 @@ class HeightController:
             dt: Duration in seconds until next cycle.
         """
         for target in ["left_contact", "right_contact"]:
-            transform_common_to_rest = pin.SE3(
+            transform_common_to_rest = SE3(
                 rotation=np.eye(3),
                 translation=self.target_position_wheel_in_rest[target],
             )
-            transform_target_to_common = pin.SE3(
+            transform_target_to_common = SE3(
                 rotation=np.eye(3),
                 translation=self.target_offset[target],
             )
@@ -346,7 +374,7 @@ class HeightController:
         transform_right_to_world = self.tasks[
             "right_contact"
         ].transform_target_to_world
-        transform_right_to_left = transform_left_to_world.actInv(
+        transform_right_to_left = transform_left_to_world.act_inv(
             transform_right_to_world
         )
         observation["height_controller"] = {
@@ -355,13 +383,20 @@ class HeightController:
 
         if self.visualizer is not None:
             self.visualizer.display(self.ik_configuration.q)
-            viewer = self.visualizer.viewer
-            viewer["left_contact_target"].set_transform(
-                transform_left_to_world.np
+            frames = self.visualizer_frames
+            set_frame_transform(
+                frames["left_contact_target"], transform_left_to_world
             )
-            viewer["right_contact_target"].set_transform(
-                transform_right_to_world.np
+            set_frame_transform(
+                frames["right_contact_target"], transform_right_to_world
             )
+            for contact in ("left_contact", "right_contact"):
+                set_frame_transform(
+                    frames[contact],
+                    self.ik_configuration.get_transform_frame_to_world(
+                        contact
+                    ),
+                )
 
     def cycle(self, observation: dict, dt: float) -> dict:
         """Compute action for a new cycle.
@@ -433,7 +468,7 @@ class HeightController:
         if np.linalg.norm(q_diff, ord=1) < 1e-5:
             logger.info("Upkie initialized to the neutral configuration")
             self.__initialized = True
-        return_configuration = pink.Configuration(
+        return_configuration = pinker.Configuration(
             self.robot.model, self.robot.data, self.q_init
         )
         return_velocity = np.zeros(self.robot.nv)

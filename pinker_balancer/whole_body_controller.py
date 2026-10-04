@@ -26,7 +26,10 @@ class WholeBodyController:
     turning_gain_scale: float
 
     def __init__(
-        self, gain_scale: float, turning_gain_scale: float, visualize: bool
+        self,
+        gain_scale: float = 2.0,
+        turning_gain_scale: float = 2.0,
+        visualize: bool = False,
     ):
         """Create controller.
 
@@ -35,7 +38,7 @@ class WholeBodyController:
             turning_gain_scale: Additional gain scale added when the robot
                 is turning to keep the legs stiff in spite of the ground
                 pulling them apart.
-            visualize: If true, open a MeshCat visualizer on the side.
+            visualize: If true, open a Viser visualizer on the side.
         """
         self.gain_scale = clamp(gain_scale, 0.1, 2.0)
         self.height_controller = HeightController(visualize=visualize)

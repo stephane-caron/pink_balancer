@@ -4,17 +4,14 @@
 # SPDX-License-Identifier: Apache-2.0
 
 import argparse
-import socket
 import traceback
-from pathlib import Path
 
-import gin
 from loop_rate_limiters import RateLimiter
 from upkie.envs.backends import SpineBackend
 from upkie.logging import logger
 from upkie.utils.raspi import configure_agent_process, on_raspi
 
-from pink_balancer import WholeBodyController
+from pinker_balancer import WholeBodyController
 
 
 def parse_command_line_arguments() -> argparse.Namespace:
@@ -25,15 +22,8 @@ def parse_command_line_arguments() -> argparse.Namespace:
     """
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
-        "-c",
-        "--config",
-        metavar="config",
-        help="Additional agent configuration to apply",
-        type=str,
-    )
-    parser.add_argument(
         "--visualize",
-        help="Publish robot visualization to MeshCat for debugging",
+        help="Publish robot visualization to Viser for debugging",
         default=False,
         action="store_true",
     )
