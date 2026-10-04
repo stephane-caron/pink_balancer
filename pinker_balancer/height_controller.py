@@ -232,6 +232,7 @@ class HeightController:
             tasks[target].set_target(transform_target_to_world)
             transform_rest_to_world[target] = transform_target_to_world
 
+        crouch_slider = None
         visualizer = None
         visualizer_frames = {}
         if visualize:
@@ -239,10 +240,18 @@ class HeightController:
 
             visualizer = start_viser_visualizer(robot)
             visualizer_frames = add_contact_frames(visualizer)
+            crouch_slider = visualizer.viewer.gui.add_slider(
+                "Crouch height [m]",
+                min=0.0,
+                max=max_crouch_height,
+                step=0.001,
+                initial_value=0.0,
+            )
 
         logger.info("Initializing Upkie to its neutral configuration...")
 
         self.__initialized = False
+        self.crouch_slider = crouch_slider
         self.ik_configuration = neutral_configuration
         self.jump_playback = None
         self.knee_side = "forward" if knees_forward else "backward"
@@ -289,6 +298,29 @@ class HeightController:
         height += velocity * dt
         return height
 
+    def get_next_height_from_slider(self, height: float, dt: float) -> float:
+        """Update target base height from the visualizer slider.
+
+        The slider sets a target height that the base height tracks at most at
+        the maximum crouch velocity. Joystick inputs take precedence: while
+        the joystick moves the height, the slider follows it.
+
+        Args:
+            height: New height target from joystick inputs, in meters.
+            dt: Duration in seconds until next cycle.
+
+        Returns:
+            New height target, in meters.
+        """
+        if height != self.target_height:  # joystick is moving the height
+            slider_value = clamp(height, 0.0, self.max_crouch_height)
+            if self.crouch_slider.value != slider_value:
+                self.crouch_slider.value = slider_value
+            return height
+        max_delta = self.max_crouch_velocity * dt
+        delta = self.crouch_slider.value - self.target_height
+        return self.target_height + clamp(delta, -max_delta, max_delta)
+
     def get_next_height_difference_from_joystick(
         self, observation: dict, dt: float
     ):
@@ -318,6 +350,8 @@ class HeightController:
             dt: Duration in seconds until next cycle.
         """
         height = self.get_next_height_from_joystick(observation, dt)
+        if self.crouch_slider is not None:
+            height = self.get_next_height_from_slider(height, dt)
         self.target_height = clamp(height, 0.0, self.max_crouch_height)
 
         next_height_difference = self.get_next_height_difference_from_joystick(
