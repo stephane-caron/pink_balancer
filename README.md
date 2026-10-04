@@ -1,6 +1,6 @@
 # Pink balancer
 
-[![upkie](https://img.shields.io/badge/upkie-13.0.0-d6336c)](https://github.com/upkie/upkie/tree/v13.0.0)
+[![upkie](https://img.shields.io/badge/upkie-13.0.1-d6336c)](https://github.com/upkie/upkie/tree/v13.0.1)
 
 An agent for [Upkie](https://github.com/upkie/upkie/) that combines wheeled balancing with inverse kinematics computed by [Pink](https://github.com/stephane-caron/pink). This is the controller that runs in the [first](https://www.youtube.com/shorts/8b36XcCgh7s) [two](https://www.youtube.com/watch?v=NO_TkHGS0wQ) videos of Upkie.
 

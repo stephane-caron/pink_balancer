@@ -214,7 +214,7 @@ environments:
       - conda: https://conda.anaconda.org/conda-forge/noarch/typing_extensions-4.12.2-pyha770c72_1.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/tzdata-2024b-hc8b5060_0.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/u-msgpack-python-2.8.0-pyhff2d567_1.conda
-      - conda: https://conda.anaconda.org/conda-forge/noarch/upkie-13.0.0-pyhd8ed1ab_0.conda
+      - conda: https://conda.anaconda.org/conda-forge/noarch/upkie-13.0.1-pyhd8ed1ab_0.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/upkie_description-2.1.0-pyhd8ed1ab_1.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/wcwidth-0.2.13-pyhd8ed1ab_1.conda
       - pypi: ./
@@ -410,7 +410,7 @@ environments:
       - conda: https://conda.anaconda.org/conda-forge/noarch/typing_extensions-4.12.2-pyha770c72_1.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/tzdata-2024b-hc8b5060_0.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/u-msgpack-python-2.8.0-pyhff2d567_1.conda
-      - conda: https://conda.anaconda.org/conda-forge/noarch/upkie-13.0.0-pyhd8ed1ab_0.conda
+      - conda: https://conda.anaconda.org/conda-forge/noarch/upkie-13.0.1-pyhd8ed1ab_0.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/upkie_description-2.1.0-pyhd8ed1ab_1.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/wcwidth-0.2.13-pyhd8ed1ab_1.conda
       - pypi: ./
@@ -5194,9 +5194,9 @@ packages:
   - pkg:pypi/u-msgpack-python?source=hash-mapping
   size: 15064
   timestamp: 1734904246170
-- conda: https://conda.anaconda.org/conda-forge/noarch/upkie-13.0.0-pyhd8ed1ab_0.conda
-  sha256: 79d7600192662add6d67bb17fda26b3c9c7b140b5d2f3d767872dc61b9c3325f
-  md5: 96db80bdcea65ca1fb069702929324b4
+- conda: https://conda.anaconda.org/conda-forge/noarch/upkie-13.0.1-pyhd8ed1ab_0.conda
+  sha256: 1b228dbb04f66e79533bcd3d7db1b615f61f221d32063eafe6a5b6706a417b1e
+  md5: bdd6bc88bbe4bf48ddd08275fc9ba915
   depends:
   - gymnasium >=0.29.1
   - loop-rate-limiters >=1.0.0
@@ -5211,8 +5211,8 @@ packages:
   purls:
   - pkg:pypi/upkie?source=compressed-mapping
   run_exports: {}
-  size: 63317
-  timestamp: 1790852070096
+  size: 63418
+  timestamp: 1791042877743
 - conda: https://conda.anaconda.org/conda-forge/noarch/upkie_description-2.1.0-pyhd8ed1ab_1.conda
   sha256: 390797a4dec65476df078d027fa2cf0be9ddfab9411b24ce9f089e70e02cb12c
   md5: bba35fe4fed55a84c56b15e6b316b12c

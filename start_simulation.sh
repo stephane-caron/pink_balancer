@@ -7,7 +7,7 @@ SCRIPT_DIR=$(dirname "${SCRIPT}")
 CACHE_DIR=${SCRIPT_DIR}/cache
 
 DOWNLOAD_URL="https://github.com/upkie/upkie/releases/download"
-VERSION=13.0.0
+VERSION=13.0.1
 
 SYSTEM=$(uname -s)
 ARCH=$(uname -m)
@@ -61,11 +61,6 @@ if [[ -n "$SPINE_ARCHIVE" ]] && [[ -z "${REBUILD}" ]]; then
         (set -o pipefail; curl -s -L "$SPINE_ARCHIVE" | tar -C "${CACHE_DIR}" -zxf -)
         CURL_TAR_RC=$?
     fi
-
-    # The v13.0.0 archive ships a runfiles MANIFEST with absolute paths from
-    # the machine that built it. Remove it so that the spine finds its robot
-    # descriptions in the runfiles directory instead.
-    rm -f "${CACHE_DIR}/bullet_spine.runfiles/MANIFEST"
 
     if [[ $CURL_TAR_RC -eq 0 ]]; then
         echo "✅ Simulation spine downloaded to cache, let's roll!"
