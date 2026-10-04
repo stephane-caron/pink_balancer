@@ -98,7 +98,6 @@ def set_frame_transform(frame, transform: SE3) -> None:
     frame.wxyz = quaternion_wxyz(transform.rotation)
 
 
-@gin.configurable
 class HeightController:
     """Compute leg inverse kinematics.
 

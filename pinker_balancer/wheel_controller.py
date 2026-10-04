@@ -1,15 +1,9 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-#
 # SPDX-License-Identifier: Apache-2.0
-# Copyright 2022 Stéphane Caron
-# Copyright 2023 Inria
 
 """Control wheels to track ground and yaw velocity targets."""
 
 from typing import Literal
 
-import gin
 import numpy as np
 from upkie.controllers import MPCBalancer
 from upkie.utils.clamp import clamp_abs
@@ -17,10 +11,7 @@ from upkie.utils.filters import abs_bounded_derivative_filter
 
 from .remote_control import RemoteControl
 
-MPCBalancer = gin.external_configurable(upkie.controllers.MPCBalancer)
 
-
-@gin.configurable
 class WheelController:
     """Base class for wheel balancers.
 
