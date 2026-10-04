@@ -30,6 +30,8 @@ To visualize the inverse kinematics of the legs in a [Viser](https://viser.studi
 pixi run agent-viz
 ```
 
+The Viser panel has a crouch height slider that works like the directional pad of the gamepad.
+
 ### On your Upkie
 
 Upload the agent to your robot (this assumes there is an `upkie` host in your SSH configuration):
