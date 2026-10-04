@@ -24,10 +24,10 @@ Then, in a separate terminal, run the agent:
 pixi run agent
 ```
 
-To visualize the inverse kinematics of the legs in a [Viser](https://viser.studio) browser tab, run the agent from the `viz` environment:
+To visualize the inverse kinematics of the legs in a [Viser](https://viser.studio) browser tab, run instead:
 
 ```console
-pixi run -e viz agent --visualize
+pixi run agent-viz
 ```
 
 ### On your Upkie
