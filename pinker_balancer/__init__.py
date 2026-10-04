@@ -4,7 +4,7 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright 2024 Inria
 
-"""Pink balancer."""
+"""Pinker balancer."""
 
 from .whole_body_controller import WholeBodyController
 

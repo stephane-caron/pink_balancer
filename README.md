@@ -1,12 +1,12 @@
-# Pink balancer
+# Pinker balancer
 
 [![upkie](https://img.shields.io/badge/upkie-13.0.1-d6336c)](https://github.com/upkie/upkie/tree/v13.0.1)
 
-An agent for [Upkie](https://github.com/upkie/upkie/) that combines wheeled balancing with inverse kinematics computed by [Pink](https://github.com/stephane-caron/pink). This is the controller that runs in the [first](https://www.youtube.com/shorts/8b36XcCgh7s) [two](https://www.youtube.com/watch?v=NO_TkHGS0wQ) videos of Upkie.
+An agent for [Upkie](https://github.com/upkie/upkie/) that combines wheeled balancing with inverse kinematics computed by [Pinker](https://github.com/pink-kinematics/pinker).
 
 ## Installation
 
-This agent uses [pixi](https://pixi.sh/latest/#installation) to manage its Python environment, both on your machine and on your Upkie.
+This agent uses [pixi](https://pixi.sh/latest/#installation) to manage its Python environment, both on your machine and on your Upkie. The first installation compiles Pinker's C extension, which takes a few seconds.
 
 ## Usage
 
@@ -24,6 +24,12 @@ Then, in a separate terminal, run the agent:
 pixi run agent
 ```
 
+To visualize the inverse kinematics of the legs in a [Viser](https://viser.studio) browser tab, run the agent from the `viz` environment:
+
+```console
+pixi run -e viz agent --visualize
+```
+
 ### On your Upkie
 
 Upload the agent to your robot (this assumes there is an `upkie` host in your SSH configuration):
@@ -36,8 +42,8 @@ Then, start the pi3hat spine on the robot and run the agent from there:
 
 ```console
 $ ssh upkie
-user@upkie:~$ cd pink_balancer
-user@upkie:pink_balancer$ pixi run agent
+user@upkie:~$ cd pinker_balancer
+user@upkie:pinker_balancer$ pixi run agent
 ```
 
 ### Gamepad commands

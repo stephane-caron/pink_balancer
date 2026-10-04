@@ -25,7 +25,7 @@ jobs:
 
             - name: "Check Python code formatting"
               run: |
-                  ruff check pink_balancer
+                  ruff check pinker_balancer
 
     ci_success:
         name: "CI success"
